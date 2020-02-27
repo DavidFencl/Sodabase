@@ -1,0 +1,10 @@
+[-] User praja extracted 7 pieces of fanta Ananas at 2020-02-25T21:37:42.898356.
+	Current number of fanta Ananas is 5.
+	User praja paid 91. His current account balance is 9.
+
+[-] User matous extracted 5 pieces of coca cola zero at 2020-02-25T21:38:03.121689.
+	Current number of coca cola zero is 5.
+	User matous paid 50. His current account balance is 50.
+
+[+] User praja inputed 3 pieces of oversized beer at 2020-02-27T09:24:17.559671.
+[+] User praja inputed 5 pieces of sprite crystal at 2020-02-27T10:06:03.167496.

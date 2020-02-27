@@ -1,3 +1,5 @@
+package databaseClient
+
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
@@ -31,7 +33,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
             return true
         return false
     }
-    private fun logExtract(user: CUser,item: CItem, num: Int) {
+    private fun logExtract(user: CUser, item: CItem, num: Int) {
         val outputDir = File("./logs/")
         if (!outputDir.exists())
             outputDir.mkdir()
@@ -43,7 +45,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
             else
                 file.appendText("\tUser ${user.name} paid ${num * item.otherPrice}. His current account balance is ${user.balance - num * item.otherPrice}.\n\n")
     }
-    private fun logImport (user: CUser,item: CItem, num: Int) {
+    private fun logImport (user: CUser, item: CItem, num: Int) {
         val outputDir = File("./logs/")
         if (!outputDir.exists())
             outputDir.mkdir()
@@ -61,7 +63,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
         val quantity = readLine()?.toInt()
         if(name == "" || null == price || null == othersPrice || null == quantity)
             return false
-        val tempItem = CItem(idCount++, name,price,othersPrice,quantity)
+        val tempItem = CItem(idCount++, name, price, othersPrice, quantity)
         addNewItem(tempItem)
         logImport(user,tempItem,quantity)
         return true
@@ -236,7 +238,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
                 }
                 // whole item is parsed
                 if(currentLine.contains("}")) {
-                    addNewItem(CItem(idCount++,name,price,otherPrice,quantity))
+                    addNewItem(CItem(idCount++, name, price, otherPrice, quantity))
                     count++
                 }
                 currentLine=input.readLine().toString()

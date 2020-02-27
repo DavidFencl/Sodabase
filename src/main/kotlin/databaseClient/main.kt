@@ -1,21 +1,13 @@
-
+package databaseClient
 import java.util.*
 
 fun main(args: Array<String>){
     // Test block
     val userDatabase = CUserDatabase(TreeMap())
-    val user1 = CUser("praja",100,"1",true, true)
-    val user2 = CUser("matous",100,"2",true, true)
+    val user1 = CUser("praja", 100, "1", true, true)
+    val user2 = CUser("matous", 100, "2", true, true)
 
     val itemDatabase = CItemDatabase(TreeMap())
-//    val item1 = CItem("coca-cola zero",11,15,7)
-//    itemDatabase.addNewItem(item1)
-//    val testSet = HashSet<CItem>()
-//    testSet.add(CItem(name = "coca-cola zero", quantity = 5))
-//    testSet.add(CItem("fanta exotic", 11, 15, 15))
-//
-//    itemDatabase.restock(testSet)
-
     userDatabase.addUser(user1)
     userDatabase.addUser(user2)
     // End of test block

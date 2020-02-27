@@ -1,3 +1,5 @@
+package databaseClient
+
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
@@ -27,9 +29,9 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 println("Je uživatel vip? Ano/Ne")
                 val answer = readLine().toString().toLowerCase()
                 if(answer == "ano")
-                    addUser(CUser(name,ammount,"",true))
+                    addUser(CUser(name, ammount, "", true))
                 else
-                    addUser(CUser(name,ammount,"",false))
+                    addUser(CUser(name, ammount, "", false))
             }
         }
         return true
@@ -65,7 +67,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         if(!outputDir.exists())
             outputDir.mkdir()
         File(pathname).printWriter().use {out ->
-            out.println("[CUserDatabase:")
+            out.println("[databaseClient.CUserDatabase:")
             userDatabase.forEach{
                 // Dont export admins!
                 if(!it.value.admin) {
@@ -94,7 +96,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
             val input = file.bufferedReader()
             var currentLine = input.readLine().toString()
             // Clear potential garbage before data
-            while(!currentLine.contains("[CUserDatabase:"))
+            while(!currentLine.contains("[databaseClient.CUserDatabase:"))
                 currentLine = input.readLine().toString()
 
             // Helper variables for parsing
@@ -118,7 +120,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 }
                 // whole item is parsed
                 if(currentLine.contains("}"))
-                    userDatabase[name] = CUser(name,balance,"",vip)
+                    userDatabase[name] = CUser(name, balance, "", vip)
                 currentLine=input.readLine().toString()
             }
         }
