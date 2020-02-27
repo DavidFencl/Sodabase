@@ -43,7 +43,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
     }
     fun listUsers(){
         for ((_, value) in userDatabase)
-            println("$value")
+            println("CUser(${value.name}, ${value.balance}, ${value.vip}, ${value.admin} )")
     }
     fun changeBalance(): Boolean{
         cleanConsole(20)
@@ -89,7 +89,6 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         i+=2
         return i
     }
-
     fun importFromFile(filename: String){
         val file = File("./data/$filename")
         if(file.exists()){
