@@ -67,7 +67,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         if(!outputDir.exists())
             outputDir.mkdir()
         File(pathname).printWriter().use {out ->
-            out.println("[databaseClient.CUserDatabase:")
+            out.println("[CUserDatabase:")
             userDatabase.forEach{
                 // Dont export admins!
                 if(!it.value.admin) {
@@ -95,7 +95,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
             val input = file.bufferedReader()
             var currentLine = input.readLine().toString()
             // Clear potential garbage before data
-            while(!currentLine.contains("[databaseClient.CUserDatabase:"))
+            while(!currentLine.contains("[CUserDatabase:"))
                 currentLine = input.readLine().toString()
 
             // Helper variables for parsing
@@ -134,9 +134,8 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
             val input = file.bufferedReader()
             var currentLine = input.readLine().toString()
             // Clear potential garbage before data
-            while(!currentLine.contains("[databaseClient.CUserDatabase:"))
+            while(!currentLine.contains("[CUserDatabase:"))
                 currentLine = input.readLine().toString()
-
             // Helper variables for parsing
             var name = ""
             var balance = 0
