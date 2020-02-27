@@ -12,6 +12,12 @@
 	"quantity":"12"
 	}
 	{
+	"name":"fanta crystal",
+	"price":"10",
+	"otherPrice":"12",
+	"quantity":"6"
+	}
+	{
 	"name":"fanta exotic",
 	"price":"12",
 	"otherPrice":"15",
@@ -24,4 +30,4 @@
 	"quantity":"5"
 	}
 ]
-Last edited by: praja at 2020-02-27T10:17:46.687465
+Last edited by: praja at 2020-02-27T13:11:00.169821

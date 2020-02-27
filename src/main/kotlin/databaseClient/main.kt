@@ -48,12 +48,12 @@ fun userMenu(user: CUser, userDatabase: CUserDatabase, itemDatabase: CItemDataba
     while(true){
         println("What do you want to do?")
         println("\t[0] - Vypiš sklad")
-        println("\t[1] - Přidej novou věc do skladu")
-        println("\t[2] - Import skladu")
-        println("\t[3] - Export skladu")
-        println("\t[4] - Vyjmi ze skladu")
-        println("\t[5] - Vypiš uživatele")
-        println("\t[6] - Změň stav konta")
+        println("\t[1] - Vyjmi ze skladu")
+        println("\t[2] - Přidej do skladu")
+        println("\t[3] - Vypiš uživatele")
+        println("\t[4] - Změň stav konta")
+        println("\t[5] - Import skladu")
+        println("\t[6] - Export skladu")
         println("\t[7] - Přidej uživatele")
         println("\t[10] - Konec")
 
@@ -62,72 +62,72 @@ fun userMenu(user: CUser, userDatabase: CUserDatabase, itemDatabase: CItemDataba
             -1 -> {println("To tu není vole!")
                     return}
             0 -> {
-                cleanConsole(20)
+                cleanConsole(3)
                 itemDatabase.listAll()
                 cleanConsole(3)
             }
             1 -> {
-                if(itemDatabase.inputItem(user)) {
-                    cleanConsole(10)
-                    println("Přidání proběhlo v pořádku")
-                    cleanConsole(10)
+                if(itemDatabase.extractItem(userDatabase)) {
+                    cleanConsole(3)
+                    println("Vydání proběhlo v pořádku")
+                    cleanConsole(3)
                 }
-                else {
-                    cleanConsole(10)
-                    println("Přidání se nezdařilo!")
-                    cleanConsole(10)
+                else{
+                    cleanConsole(3)
+                    println("Vydání se nezdařilo")
+                    cleanConsole(3)
                 }
             }
             2 -> {
+                if(itemDatabase.inputItem(user)) {
+                    cleanConsole(3)
+                    println("Přidání proběhlo v pořádku")
+                    cleanConsole(3)
+                }
+                else {
+                    cleanConsole(3)
+                    println("Přidání se nezdařilo!")
+                    cleanConsole(3)
+                }
+            }
+            3 -> {
+                cleanConsole(3)
+                userDatabase.listUsers()
+                cleanConsole(3)
+            }
+            4 -> {
+                if(userDatabase.changeBalance()){
+                    cleanConsole(3)
+                    println("Změna proběhla v pořádku")
+                    cleanConsole(3)
+                }
+                else{
+                    cleanConsole(3)
+                    println("Změna se nezdařila")
+                    cleanConsole(3)
+                }
+            }
+            5 -> {
                 println("Zadej cestu k souboru:")
                 val path = readLine().toString()
                 itemDatabase.importFromFile(path)
 
             }
-            3 -> {
+            6 -> {
                 println("Zadej cestu k souboru:")
                 val path = readLine().toString()
                 itemDatabase.exportToFile(path, user)
             }
-            4 -> {
-                if(itemDatabase.extractItem(userDatabase)) {
-                    cleanConsole(10)
-                    println("Export proběhl v pořádku")
-                    cleanConsole(10)
-                }
-                else{
-                    cleanConsole(10)
-                    println("Export se nezdařil")
-                    cleanConsole(10)
-                }
-                }
-            5 -> {
-                cleanConsole(10)
-                userDatabase.listUsers()
-                cleanConsole(3)
-            }
-            6 -> {
-                if(userDatabase.changeBalance()){
-                    cleanConsole(10)
-                    println("Změna proběhla v pořádku")
-                    cleanConsole(10)
-                }
-                else{
-                    cleanConsole(10)
-                    println("Změna se nezdařila")
-                    cleanConsole(10)
-                }
-            }
             7 ->{
                 if(userDatabase.importUser()) {
-                    cleanConsole(10)
+                    cleanConsole(3)
                     println("Import proběhl v pořádku")
-                    cleanConsole(10)
+                    cleanConsole(3)
                 }
                 else{
-                    cleanConsole(10)
+                    cleanConsole(3)
                     println("Import se nezdařil")
-                    cleanConsole(10)
+                    cleanConsole(3)
                 }
             }
             10 -> {
@@ -144,9 +144,10 @@ fun userMenu(user: CUser, userDatabase: CUserDatabase, itemDatabase: CItemDataba
 }
 
 fun initialize(itemDatabase: CItemDatabase, userDatabase: CUserDatabase){
-    itemDatabase.importFromFile("items.txt")
-    userDatabase.importFromFile("users.txt")
+    itemDatabase.silentImportFromFile("items.txt")
+    userDatabase.silentImportFromFile("users.txt")
 }
+
 fun cleanConsole(it: Int){
     var iterations = it
     while(iterations > 0) {

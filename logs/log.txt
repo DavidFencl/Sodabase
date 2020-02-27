@@ -8,3 +8,16 @@
 
 [+] User praja inputed 3 pieces of oversized beer at 2020-02-27T09:24:17.559671.
 [+] User praja inputed 5 pieces of sprite crystal at 2020-02-27T10:06:03.167496.
+[+] User praja inputed 14 pieces of fanta crystal at 2020-02-27T12:45:45.032073.
+[-] User praja extracted 5 pieces of coca cola zero at 2020-02-27T12:57:14.133487.
+	Current number of coca cola zero is 0.
+	User praja paid 50. His current account balance is 0.
+
+[-] User matous extracted 8 pieces of fanta crystal at 2020-02-27T13:05:37.984765.
+	Current number of fanta crystal is 6.
+	User matous paid 80. His current account balance is 20.
+
+[-] User matous extracted 2 pieces of fanta exotic at 2020-02-27T13:13:41.581281.
+	Current number of fanta exotic is 0.
+	User matous paid 24. His current account balance is 76.
+

@@ -43,10 +43,10 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
     }
     fun listUsers(){
         for ((_, value) in userDatabase)
-            println("CUser(${value.name}, ${value.balance}, ${value.vip}, ${value.admin} )")
+            println("CUser(name=${value.name}, balance=${value.balance}, vip=${value.vip}, admin=${value.admin})")
     }
     fun changeBalance(): Boolean{
-        cleanConsole(20)
+        cleanConsole(3)
         println("Komu?")
         val name = readLine().toString().toLowerCase()
         val tempUser = getUserByName(name)
@@ -125,6 +125,44 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         }
         else{
             println("Takový soubor neexistuje!")
+            return
+        }
+    }
+    fun silentImportFromFile(filename: String){
+        val file = File("./data/$filename")
+        if(file.exists()){
+            val input = file.bufferedReader()
+            var currentLine = input.readLine().toString()
+            // Clear potential garbage before data
+            while(!currentLine.contains("[databaseClient.CUserDatabase:"))
+                currentLine = input.readLine().toString()
+
+            // Helper variables for parsing
+            var name = ""
+            var balance = 0
+            var vip = false
+
+            // read until you reach end of file
+            while(!currentLine.contains("]")){
+                if(currentLine.contains("\"name\":")){
+                    val i = skipHead(currentLine)
+                    name = currentLine.subSequence(i, currentLine.length - 2).toString()
+                }
+                if(currentLine.contains("\"balance\":")){
+                    val i = skipHead(currentLine)
+                    balance = (currentLine.subSequence(i, currentLine.length - 2)).toString().toInt()
+                }
+                if(currentLine.contains("\"vip\":")){
+                    val i = skipHead(currentLine)
+                    vip = (currentLine.subSequence(i, currentLine.length - 2)).toString().toBoolean()
+                }
+                // whole item is parsed
+                if(currentLine.contains("}"))
+                    userDatabase[name] = CUser(name, balance, "", vip)
+                currentLine=input.readLine().toString()
+            }
+        }
+        else{
             return
         }
     }

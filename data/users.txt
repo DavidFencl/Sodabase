@@ -1,13 +1,13 @@
 [databaseClient.CUserDatabase:
 	{
 	"name":"michal",
-	"balance":"2",
+	"balance":"202",
 	"vip":"false"
 	}
 	{
 	"name":"pedro",
 	"balance":"580",
-	"vip":"true"
+	"vip":"false"
 	}
 ]
-Last edited by: praja at 2020-02-27T10:17:46.698963
+Last edited by: praja at 2020-02-27T13:11:00.180677
