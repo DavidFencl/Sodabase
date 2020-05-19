@@ -3,31 +3,49 @@
 	"name":"coca cola zero",
 	"price":"10",
 	"otherPrice":"12",
-	"quantity":"10"
+	"quantity":"47"
 	}
 	{
 	"name":"fanta Ananas",
 	"price":"13",
 	"otherPrice":"1",
-	"quantity":"12"
+	"quantity":"48"
 	}
 	{
 	"name":"fanta crystal",
 	"price":"10",
 	"otherPrice":"12",
-	"quantity":"6"
+	"quantity":"24"
 	}
 	{
 	"name":"fanta exotic",
 	"price":"12",
 	"otherPrice":"15",
-	"quantity":"2"
+	"quantity":"8"
+	}
+	{
+	"name":"item for test",
+	"price":"2",
+	"otherPrice":"1",
+	"quantity":"6"
+	}
+	{
+	"name":"new item",
+	"price":"12",
+	"otherPrice":"13",
+	"quantity":"14"
 	}
 	{
 	"name":"sprite crystal",
 	"price":"12",
 	"otherPrice":"14",
-	"quantity":"5"
+	"quantity":"20"
+	}
+	{
+	"name":"tasd",
+	"price":"30",
+	"otherPrice":"20",
+	"quantity":"10"
 	}
 ]
-Last edited by: praja at 2020-02-27T13:28:16.415587
+Last edited by: praja at 2020-05-19T21:46:27.826888

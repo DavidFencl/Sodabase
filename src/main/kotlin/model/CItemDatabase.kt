@@ -1,13 +1,13 @@
-package databaseClient
+package model
 
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
 
-data class CItemDatabase (val inventory: TreeMap<String, CItem>){
-    companion object{
-        var idCount = 0
-    }
+object CItemDatabase {
+    private var idCount = 1
+    private val inventory: TreeMap<String, CItem> = sortedMapOf<String,CItem>() as TreeMap<String, CItem>
+    private val userDatabase = CUserDatabase
 
     private fun addNewItem(item: CItem){
         // Update already existing item
@@ -20,14 +20,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
         else
             inventory[item.name] = item
     }
-    fun listAll(){
-        for ((_,v) in inventory)
-            println("Inventory contains: $v")
-    }
-    fun listAllWithTabs(){
-        for ((_,v) in inventory)
-            println("\t\tInventory contains: $v")
-    }
+
     fun contains(item: String): Boolean {
         if(inventory.containsKey(item))
             return true
@@ -52,86 +45,37 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
         val file = File("./logs/log.txt")
         file.appendText("[+] User ${user.name} inputed $num pieces of ${item.name} at ${LocalDateTime.now()}.\n\n")
     }
-    fun inputItem(user: CUser): Boolean{
-        println("Zadejte jméno položky:")
-        val name = readLine().toString().toLowerCase()
-        println("Zadejte cenu pro kamarády:")
-        val price = readLine()?.toInt()
-        println("Zadejte cenu pro ostatní kolegy:")
-        val othersPrice = readLine()?.toInt()
-        println("Zadejte počet kusů:")
-        val quantity = readLine()?.toInt()
-        if(name == "" || null == price || null == othersPrice || null == quantity)
-            return false
+    fun inputItem(user: CUser, name: String, price: Int, othersPrice: Int, quantity: Int){
         val tempItem = CItem(idCount++, name, price, othersPrice, quantity)
         addNewItem(tempItem)
         logImport(user,tempItem,quantity)
-        return true
     }
-    fun extractItem(userDatabase: CUserDatabase): Boolean {
-        cleanConsole(3)
-        println("Kdo?")
-        val name = readLine().toString().toLowerCase()
-        val currentUser: CUser? = userDatabase.getUserByName(name)
-        if (null == currentUser) {
-            println("Takový uživatel neexistuje")
-            return false
-        } else {
-            println("Co si bere ze skladu? (Zadej ID)")
-            println("\tSklad obsahuje:")
-            listAllWithTabs()
-            println()
-            val itemID = readLine()?.toInt() ?: return false
-            val item = getItem(itemID)
-            if (item != null) {
-                println("Kolik?")
-                val quantity = readLine()?.toInt() ?: return false
-                if (checkOutItems(currentUser,itemID, quantity)) {
-                    val userBalance = currentUser.balance
-                    if (currentUser.vip) {
-                        if (userBalance < (quantity * item.price)) {
-                            println("Pozor! Jsi v mínusu!")
-                        }
-                        currentUser.balance = userBalance - quantity * item.price
-                    } else {
-                        if (userBalance < (quantity * item.price)) {
-                            println("Pozor! Jsi v mínusu!")
-                        }
-                        currentUser.balance = userBalance - quantity * item.price
-                    }
-                }
-            } else {
-                return false
-            }
-            return true
+    fun extractItem(ID: Int, quantity: Int): ReturnValues {
+        val currentUser: CUser = userDatabase.currentUser ?: return ReturnValues.BAD_USER
+        val item = getItem(ID) ?: return ReturnValues.BAD_ID
+        val retVal = checkOutItems(currentUser,ID, quantity)
+
+        if (retVal == ReturnValues.OK) {
+            val userBalance = currentUser.balance
+            if (currentUser.vip)
+                currentUser.balance = userBalance - quantity * item.price
+            else
+                currentUser.balance = userBalance - quantity * item.otherPrice
         }
+        return retVal
     }
-    private fun checkOutItems(user: CUser, itemID: Int?, num: Int): Boolean{
-        if(itemID == null)
-            return false
-        val item = getItem(itemID)
-        if (item == null){
-            println("Taková věc ve skladu není!")
-            return false
-        }
-        var sum = item.quantity
-        if(sum == 0)
-            println("Ve skladu už ${item.name} není :(")
-        else {
-            if(num > sum) {
-                println("To je moc!")
-                return false
-            }
-            logExtract(user, item, num)
-            item.quantity=sum-num
-            sum -= num
-            if(sum<5)
-                println("!!!! POZOR !!!! - Zbývá pouze $sum kusů")
-            println("${item.name} byl odebrán. Nový počet kusů je $sum")
-        }
-        return true
+    private fun checkOutItems(user: CUser, itemID: Int?, num: Int): ReturnValues{
+        val item = getItem(itemID?:return ReturnValues.BAD_ID)?:return ReturnValues.BAD_ID
+        val sum = item.quantity
+
+        if(num > sum)
+            return ReturnValues.TOO_MANY
+        logExtract(user, item, num)
+        item.quantity-=num
+
+        return ReturnValues.OK
     }
-    fun getItem(ID: Int?): CItem?{
+    private fun getItem(ID: Int?): CItem?{
         if(ID == null)
             return null
         val tempItem = null
@@ -156,6 +100,9 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
             out.println("]")
             out.print("Last edited by: ${user.name} at ${LocalDateTime.now()}")
         }
+    }
+    fun getData(): List<CItem>{
+        return inventory.values.toList()
     }
     private fun skipHead(line: String): Int{
         var i = 0
@@ -207,9 +154,7 @@ data class CItemDatabase (val inventory: TreeMap<String, CItem>){
                 }
                 currentLine=input.readLine().toString()
             }
-            cleanConsole(3)
-            println("Import položek proběhl v pořádku - bylo importováno $count položek.")
-            cleanConsole(3)
+
         }
         else{
             println("Takový soubor neexistuje!")

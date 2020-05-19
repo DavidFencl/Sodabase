@@ -3,5 +3,6 @@ module Sodabase {
     requires javafx.graphics;
     requires tornadofx;
     requires kotlin.stdlib;
-    opens clientUI;
+    requires bcprov.jdk16;
+    opens view;
 }

@@ -1,10 +1,18 @@
-package databaseClient
+package model
 
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
 
-data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
+
+object CUserDatabase{
+    private val userDatabase: TreeMap<String, CUser> = sortedMapOf<String,CUser>() as TreeMap<String, CUser>
+    private val encryptor = PasswordEncrypt
+    var currentUser : CUser? = null
+
+    init{
+        this.addUser(CUser("praja",200,"test",true,true))
+    }
     fun getUserByName(name: String): CUser?{
         if(userDatabase.containsKey(name))
             return userDatabase.getValue(name)
@@ -36,17 +44,22 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         }
         return true
     }
+    fun authenticateUser(name: String, password: String): ReturnValues{
+        if(!isPresent(name))
+            return ReturnValues.BAD_USER
+        if(userDatabase[name]?.password != password)
+            return ReturnValues.BAD_USER
+        currentUser = userDatabase[name]
+        return ReturnValues.OK
+    }
     fun isPresent(name: String): Boolean{
         if(userDatabase.contains(name))
             return true
         return false
     }
-    fun listUsers(){
-        for ((_, value) in userDatabase)
-            println("CUser(name=${value.name}, balance=${value.balance}, vip=${value.vip}, admin=${value.admin})")
-    }
+
     fun changeBalance(): Boolean{
-        cleanConsole(3)
+
         println("Komu?")
         val name = readLine().toString().toLowerCase()
         val tempUser = getUserByName(name)
@@ -69,12 +82,10 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
         File(pathname).printWriter().use {out ->
             out.println("[CUserDatabase:")
             userDatabase.forEach{
-                // Dont export admins!
-                if(!it.value.admin) {
-                    out.println("\t{\n\t\"name\":\"${it.value.name}\",")
-                    out.println("\t\"balance\":\"${it.value.balance}\",")
-                    out.println("\t\"vip\":\"${it.value.vip}\"\n\t}")
-                }
+                out.println("\t{\n\t\"name\":\"${it.value.name}\",")
+                out.println("\t\"password\":\"${encryptor.encrypt(it.value.password)}\",")
+                out.println("\t\"balance\":\"${it.value.balance}\",")
+                out.println("\t\"vip\":\"${it.value.vip}\"\n\t}")
             }
             out.println("]")
             out.print("Last edited by: ${user.name} at ${LocalDateTime.now()}")
@@ -100,6 +111,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
 
             // Helper variables for parsing
             var name = ""
+            var password = ""
             var balance = 0
             var vip = false
 
@@ -108,6 +120,10 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 if(currentLine.contains("\"name\":")){
                     val i = skipHead(currentLine)
                     name = currentLine.subSequence(i, currentLine.length - 2).toString()
+                }
+                if(currentLine.contains("\"password\":")){
+                    val i = skipHead(currentLine)
+                    password = (currentLine.subSequence(i, currentLine.length - 2)).toString()
                 }
                 if(currentLine.contains("\"balance\":")){
                     val i = skipHead(currentLine)
@@ -119,7 +135,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 }
                 // whole item is parsed
                 if(currentLine.contains("}"))
-                    userDatabase[name] = CUser(name, balance, "", vip)
+                    userDatabase[name] = CUser(name, balance, password, vip)
                 currentLine=input.readLine().toString()
             }
         }
@@ -138,6 +154,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 currentLine = input.readLine().toString()
             // Helper variables for parsing
             var name = ""
+            var password = ""
             var balance = 0
             var vip = false
 
@@ -146,6 +163,10 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 if(currentLine.contains("\"name\":")){
                     val i = skipHead(currentLine)
                     name = currentLine.subSequence(i, currentLine.length - 2).toString()
+                }
+                if(currentLine.contains("\"password\":")){
+                    val i = skipHead(currentLine)
+                    password = (currentLine.subSequence(i, currentLine.length - 2)).toString()
                 }
                 if(currentLine.contains("\"balance\":")){
                     val i = skipHead(currentLine)
@@ -157,7 +178,7 @@ data class CUserDatabase(var userDatabase: TreeMap<String, CUser>){
                 }
                 // whole item is parsed
                 if(currentLine.contains("}"))
-                    userDatabase[name] = CUser(name, balance, "", vip)
+                    userDatabase[name] = CUser(name, balance, encryptor.decrypt(password)?:return, vip)
                 currentLine=input.readLine().toString()
             }
         }

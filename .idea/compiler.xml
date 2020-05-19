@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Sodabase" target="1.11" />
+      <module name="Sodabase" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
