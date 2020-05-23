@@ -8,72 +8,44 @@ import java.util.*
 object CUserDatabase{
     private val userDatabase: TreeMap<String, CUser> = sortedMapOf<String,CUser>() as TreeMap<String, CUser>
     private val encryptor = PasswordEncrypt
-    var currentUser : CUser? = null
+    var currentUser =CUser("EMPTY",vip = false)
 
     init{
-        this.addUser(CUser("praja",200,"test",true,true))
+        addUser(CUser("praja",200,"test",true))
+        silentImportFromFile("users.txt")
     }
     fun getUserByName(name: String): CUser?{
         if(userDatabase.containsKey(name))
             return userDatabase.getValue(name)
         return null
     }
-    fun addUser(user: CUser){
+    private fun addUser(user: CUser){
         userDatabase[user.name] = user
     }
-    fun importUser(): Boolean{
-        println("Zadej jméno nového uživatele")
-        val name = readLine().toString().toLowerCase()
-        if(isPresent(name)) {
-            println("Takový uživatel již existuje!")
-            return false
-        }
-        else{
-            println("Zadej počáteční stav konta")
-            val ammount = readLine()?.toInt()
-            if(ammount == null)
-                println("Neplatná hodnota!")
-            else{
-                println("Je uživatel vip? Ano/Ne")
-                val answer = readLine().toString().toLowerCase()
-                if(answer == "ano")
-                    addUser(CUser(name, ammount, "", true))
-                else
-                    addUser(CUser(name, ammount, "", false))
-            }
-        }
-        return true
+
+    fun safeAddUser(name: String, password1: String, password2: String, balance: Int, vip: Boolean): ReturnValues{
+        if(isPresent(name))
+            return ReturnValues.BAD_USER
+        if(password1 != password2)
+            return ReturnValues.PASSWORD_MISMATCH
+        addUser(CUser(name,balance,password1,vip))
+        return ReturnValues.OK
     }
+
     fun authenticateUser(name: String, password: String): ReturnValues{
         if(!isPresent(name))
             return ReturnValues.BAD_USER
         if(userDatabase[name]?.password != password)
             return ReturnValues.BAD_USER
-        currentUser = userDatabase[name]
+        currentUser = userDatabase[name]?:CUser("EMPTY",vip = false)
         return ReturnValues.OK
     }
-    fun isPresent(name: String): Boolean{
+    private fun isPresent(name: String): Boolean{
         if(userDatabase.contains(name))
             return true
         return false
     }
 
-    fun changeBalance(): Boolean{
-
-        println("Komu?")
-        val name = readLine().toString().toLowerCase()
-        val tempUser = getUserByName(name)
-        if(null != tempUser) {
-            println("Kolik chceš přidat?")
-            val amount = readLine()?.toInt()
-            tempUser.balance += amount?:0
-        }
-        else {
-            println("Takový uživatel neexistuje!")
-            return false
-        }
-        return true
-    }
     fun exportToFile(filename: String, user: CUser){
         val outputDir = File("./data/")
         val pathname = "./data/$filename"
@@ -174,7 +146,7 @@ object CUserDatabase{
                 }
                 if(currentLine.contains("\"vip\":")){
                     val i = skipHead(currentLine)
-                    vip = (currentLine.subSequence(i, currentLine.length - 2)).toString().toBoolean()
+                    vip = (currentLine.subSequence(i, currentLine.length - 1)).toString().toBoolean()
                 }
                 // whole item is parsed
                 if(currentLine.contains("}"))

@@ -4,6 +4,7 @@ import controller.ItemController
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import javafx.stage.StageStyle
 
 import tornadofx.*
 
@@ -12,9 +13,8 @@ class ItemImportView :View("Sodabase - Input item") {
     private var itemPrice =  SimpleIntegerProperty()
     private var otherPrice =  SimpleIntegerProperty()
     private var itemQuantity =  SimpleIntegerProperty()
-    private val itemController = ItemController
 
-    override val root = form(){
+    override val root = form{
         fieldset ("Add item", labelPosition = Orientation.VERTICAL){
             field("Item name") {
                 textfield(itemName)
@@ -36,10 +36,11 @@ class ItemImportView :View("Sodabase - Input item") {
             }
             hbox (30) {
                 button("Add item"){
+                    shortcut("Enter")
                     action {
                         if(itemName.get() != "" && itemPrice.get() != 0 && otherPrice.get() != 0 && itemQuantity.get() != 0) {
-                            println("Adding: ${itemName.get()}, price: ${itemPrice.get()} others price: ${otherPrice.get()}, quantity: ${itemQuantity.get()}.")
-                            itemController.tryAddItem(itemName.get(),itemPrice.get(),otherPrice.get(),itemQuantity.get())
+                            ItemController.tryAddItem(itemName.get(),itemPrice.get(),otherPrice.get(),itemQuantity.get())
+                            find<ImportOk>().openModal(StageStyle.DECORATED, block = true)
                             replaceWith(ButtonMenu::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.LEFT))
                         }
                     }
@@ -51,5 +52,11 @@ class ItemImportView :View("Sodabase - Input item") {
                 }
                 }
             }
+        }
+        override fun onUndock(){
+            itemName.set("")
+            itemPrice.set(0)
+            otherPrice.set(0)
+            itemQuantity.set(0)
         }
     }

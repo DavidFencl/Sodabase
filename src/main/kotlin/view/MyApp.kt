@@ -6,6 +6,9 @@ fun main(){
     launch<MyApp>()
 }
 
-class MyApp: App(LoginView::class) {
-
+class MyApp: App(LoginView::class, MyStylesheet::class) {
+    init {
+        reloadViewsOnFocus()
+        reloadStylesheetsOnFocus()
+    }
 }

@@ -1,23 +1,20 @@
 package controller
 
-
-import model.CUser
 import model.CUserDatabase
 import model.ReturnValues
 import tornadofx.*
-import java.util.*
 
 internal object UserController: Controller() {
-    private val userDatabase = CUserDatabase
-    init {
-        userDatabase.silentImportFromFile("users.txt")
-    }
 
     fun loginAttempt(name: String, password: String):ReturnValues{
-        return userDatabase.authenticateUser(name,password)
+        return CUserDatabase.authenticateUser(name,password)
     }
 
     fun saveChanges(){
-        userDatabase.exportToFile("users.txt", userDatabase.currentUser?: CUser("Error by export"))
+        CUserDatabase.exportToFile("users.txt", CUserDatabase.currentUser)
+    }
+
+    fun registerUser(name: String, password1: String, password2: String, balance: Int, vip: Boolean):ReturnValues{
+        return CUserDatabase.safeAddUser(name,password1,password2,balance, vip)
     }
 }

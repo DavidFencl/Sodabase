@@ -3,8 +3,10 @@ package view
 import controller.ItemController
 import controller.UserController
 import javafx.geometry.Pos
+import javafx.scene.control.TableView
 import model.CItem
 import model.CItemDatabase
+import model.CUserDatabase
 import tornadofx.*
 
 class MenuView : View("Sodabase"){
@@ -15,16 +17,16 @@ class MenuView : View("Sodabase"){
         left=menu.root
         center=itemDBPreview.root
     }
-
 }
 
 class ButtonMenu : View(){
-    private val userController = UserController
-    private val itemController = ItemController
     override val root = borderpane() {
+        addClass(MyStylesheet.menu)
         center {
             vbox (10,Pos.BASELINE_CENTER){
-                label("Menu")
+                label("Menu"){
+                    addClass(MyStylesheet.menuLabel)
+                }
                 button("Add item"){
                     action {
                         replaceWith(ItemImportView::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.RIGHT))
@@ -35,7 +37,11 @@ class ButtonMenu : View(){
                         replaceWith(ItemWithdrawalView::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.RIGHT))
                     }
                 }
-                button("Button 3")
+                button("Add user"){
+                    action{
+                        replaceWith(UserAdditionView::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.RIGHT))
+                    }
+                }
                 button("Button 4")
             }
         }
@@ -43,8 +49,8 @@ class ButtonMenu : View(){
             hbox (10,Pos.BASELINE_CENTER){
                 button("Exit") {
                     action {
-                        userController.saveChanges()
-                        itemController.saveChanges()
+                        UserController.saveChanges()
+                        ItemController.saveChanges()
                         close()
                     }
                 }
@@ -54,14 +60,15 @@ class ButtonMenu : View(){
 }
 
 class ItemDatabaseView: View() {
-    private val itemDatabase = CItemDatabase
-    private val items = itemDatabase.getData().asObservable()
-
-    override val root = tableview(items) {
+    override val root = tableview(CItemDatabase.getData().asObservable()) {
+        addClass(MyStylesheet.itemTable)
         readonlyColumn("ID", CItem::ID)
         readonlyColumn("Name", CItem::name)
         readonlyColumn("Friends price", CItem::price)
         readonlyColumn("Others price", CItem::otherPrice)
         readonlyColumn("Quantity", CItem::quantity)
+
+       // smartResize()
     }
+
 }

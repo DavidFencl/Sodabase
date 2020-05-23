@@ -5,19 +5,13 @@ import tornadofx.Controller
 
 
 internal object ItemController: Controller() {
-    private val itemDatabase = CItemDatabase
-    private val currentUser = CUserDatabase.currentUser
-
-    init {
-        itemDatabase.silentImportFromFile("items.txt")
-    }
     fun tryAddItem(name: String, price: Int, othersPrice: Int, quantity: Int){
-        itemDatabase.inputItem(currentUser?:CUser("Error by addition"),name,price,othersPrice,quantity)
+        CItemDatabase.inputItem(CUserDatabase.currentUser,name,price,othersPrice,quantity)
     }
     fun tryWithdrawItem(ID: Int, quantity: Int):ReturnValues{
-        return itemDatabase.extractItem(ID, quantity)
+        return CItemDatabase.extractItem(ID, quantity)
     }
     fun saveChanges(){
-        itemDatabase.exportToFile("items.txt", currentUser?: CUser("Error by export"))
+        CItemDatabase.exportToFile("items.txt", CUserDatabase.currentUser)
     }
 }

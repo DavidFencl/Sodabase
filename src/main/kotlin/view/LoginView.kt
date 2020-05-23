@@ -11,13 +11,9 @@ import tornadofx.*
 class LoginView : View("Log in"){
     private var name =  SimpleStringProperty()
     private var password = SimpleStringProperty()
-    private val userController = UserController
 
     override val root =form{
-        style{
-            this.minWidth = Dimension(50.0, Dimension.LinearUnits.pc)
-            this.minHeight = Dimension(20.0, Dimension.LinearUnits.pc)
-        }
+        addClass(MyStylesheet.loginScreen)
         fieldset ("Login", labelPosition = Orientation.VERTICAL){
             field("Name") {
                 textfield(name)
@@ -27,10 +23,11 @@ class LoginView : View("Log in"){
             }
             hbox (30) {
                 button("Log in") {
+                    shortcut("Enter")
                     action {
                         if (name.isNull.value || password.isNull.value)
                             println("Please fill both fields!")
-                        else if (ReturnValues.OK == userController.loginAttempt(name.get(), password.get())) {
+                        else if (ReturnValues.OK == UserController.loginAttempt(name.get(), password.get())) {
                             replaceWith(
                                 MenuView::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.DOWN)
                             )

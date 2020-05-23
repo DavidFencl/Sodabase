@@ -15,30 +15,31 @@ class ItemWithdrawalView : View("Sodabase - Withdraw item") {
     private var itemQuantity =  SimpleIntegerProperty()
     private val itemController = ItemController
 
-
-    override val root = form(){
+    override val root = form{
         fieldset ("Withdraw item", labelPosition = Orientation.VERTICAL){
                 field("Item ID") {
-                    textfield(itemID) {
-                        filterInput { it.controlNewText.isInt() }
+                        textfield(itemID) {
+                            filterInput { it.controlNewText.isInt() }
                     }
                 }
                 field("Item quantity") {
-                    textfield(itemQuantity) {
-                        filterInput { it.controlNewText.isInt() }
+                        textfield(itemQuantity) {
+                            filterInput { it.controlNewText.isInt() }
                     }
                 }
-            label("Current user balance: ${currentUser?.balance}")
+            label("Current user balance: ${currentUser.balance}")
             hbox (30) {
                 button("Withdraw item"){
+                    shortcut("Enter")
                     action {
                         if(itemID.get() != 0 && itemQuantity.get() != 0){
-                            itemController.tryWithdrawItem(itemID.get(), itemQuantity.get())
                             when(itemController.tryWithdrawItem(itemID.get(), itemQuantity.get())){
                                 ReturnValues.BAD_ID -> find<BadItemId>().openModal(StageStyle.DECORATED, block = true)
                                 ReturnValues.TOO_MANY -> find<TooManyItems>().openModal(StageStyle.DECORATED, block = true)
-                                ReturnValues.OK -> TODO()
-
+                                else -> {
+                                    find<WithdrawalOk>().openModal(StageStyle.DECORATED, block = true)
+                                    replaceWith(ButtonMenu::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.LEFT))
+                                }
                             }
                         }
                     }
@@ -50,5 +51,9 @@ class ItemWithdrawalView : View("Sodabase - Withdraw item") {
                 }
             }
         }
+    }
+    override fun onUndock(){
+        itemID.set(0)
+        itemQuantity.set(0)
     }
 }

@@ -9,6 +9,9 @@ object CItemDatabase {
     private val inventory: TreeMap<String, CItem> = sortedMapOf<String,CItem>() as TreeMap<String, CItem>
     private val userDatabase = CUserDatabase
 
+    init {
+        silentImportFromFile("items.txt")
+    }
     private fun addNewItem(item: CItem){
         // Update already existing item
         if(inventory[item.name] != null){
@@ -47,28 +50,32 @@ object CItemDatabase {
     }
     fun inputItem(user: CUser, name: String, price: Int, othersPrice: Int, quantity: Int){
         val tempItem = CItem(idCount++, name, price, othersPrice, quantity)
+        userDatabase.currentUser.changeBalance(price*quantity)
         addNewItem(tempItem)
         logImport(user,tempItem,quantity)
     }
     fun extractItem(ID: Int, quantity: Int): ReturnValues {
-        val currentUser: CUser = userDatabase.currentUser ?: return ReturnValues.BAD_USER
+        val currentUser = userDatabase.currentUser
+        if(currentUser.name=="EMPTY")
+            return ReturnValues.BAD_USER
         val item = getItem(ID) ?: return ReturnValues.BAD_ID
         val retVal = checkOutItems(currentUser,ID, quantity)
 
         if (retVal == ReturnValues.OK) {
-            val userBalance = currentUser.balance
-            if (currentUser.vip)
-                currentUser.balance = userBalance - quantity * item.price
+            if (currentUser.vip) {
+
+                currentUser.balance -= quantity * item.price
+            }
             else
-                currentUser.balance = userBalance - quantity * item.otherPrice
+                currentUser.balance -= quantity * item.otherPrice
         }
         return retVal
     }
-    private fun checkOutItems(user: CUser, itemID: Int?, num: Int): ReturnValues{
-        val item = getItem(itemID?:return ReturnValues.BAD_ID)?:return ReturnValues.BAD_ID
-        val sum = item.quantity
+    private fun checkOutItems(user: CUser, itemID: Int, num: Int): ReturnValues{
+        val item = getItem(itemID)?:return ReturnValues.BAD_ID
+        val quantity = item.quantity
 
-        if(num > sum)
+        if(num > quantity)
             return ReturnValues.TOO_MANY
         logExtract(user, item, num)
         item.quantity-=num
@@ -157,7 +164,6 @@ object CItemDatabase {
 
         }
         else{
-            println("Takový soubor neexistuje!")
             return
         }
     }
