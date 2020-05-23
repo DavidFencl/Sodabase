@@ -2,7 +2,6 @@ package view
 
 import controller.ItemController
 import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
 import javafx.stage.StageStyle
 import model.CUserDatabase.currentUser
@@ -13,7 +12,6 @@ import tornadofx.*
 class ItemWithdrawalView : View("Sodabase - Withdraw item") {
     private var itemID =  SimpleIntegerProperty()
     private var itemQuantity =  SimpleIntegerProperty()
-    private val itemController = ItemController
 
     override val root = form{
         fieldset ("Withdraw item", labelPosition = Orientation.VERTICAL){
@@ -33,7 +31,7 @@ class ItemWithdrawalView : View("Sodabase - Withdraw item") {
                     shortcut("Enter")
                     action {
                         if(itemID.get() != 0 && itemQuantity.get() != 0){
-                            when(itemController.tryWithdrawItem(itemID.get(), itemQuantity.get())){
+                            when(ItemController.tryWithdrawItem(itemID.get(), itemQuantity.get())){
                                 ReturnValues.BAD_ID -> find<BadItemId>().openModal(StageStyle.DECORATED, block = true)
                                 ReturnValues.TOO_MANY -> find<TooManyItems>().openModal(StageStyle.DECORATED, block = true)
                                 else -> {

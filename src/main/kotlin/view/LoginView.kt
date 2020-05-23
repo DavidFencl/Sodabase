@@ -3,7 +3,6 @@ package view
 import controller.UserController
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
-import javafx.geometry.Pos
 import javafx.stage.StageStyle
 import model.ReturnValues
 import tornadofx.*

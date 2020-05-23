@@ -1,4 +1,4 @@
-package view;
+package view
 
 import controller.UserController
 import javafx.beans.property.SimpleBooleanProperty
@@ -9,7 +9,7 @@ import javafx.stage.StageStyle
 import model.ReturnValues
 import tornadofx.*
 
-class UserAdditionView : View(){
+class UserAdditionView : View("Sodabase - Add user"){
     private var userName =  SimpleStringProperty()
     private var password1 =  SimpleStringProperty()
     private var password2 =  SimpleStringProperty()

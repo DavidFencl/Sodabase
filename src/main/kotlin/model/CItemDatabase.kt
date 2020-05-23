@@ -7,7 +7,6 @@ import java.util.*
 object CItemDatabase {
     private var idCount = 1
     private val inventory: TreeMap<String, CItem> = sortedMapOf<String,CItem>() as TreeMap<String, CItem>
-    private val userDatabase = CUserDatabase
 
     init {
         silentImportFromFile("items.txt")
@@ -50,12 +49,12 @@ object CItemDatabase {
     }
     fun inputItem(user: CUser, name: String, price: Int, othersPrice: Int, quantity: Int){
         val tempItem = CItem(idCount++, name, price, othersPrice, quantity)
-        userDatabase.currentUser.changeBalance(price*quantity)
+        CUserDatabase.currentUser.changeBalance(price*quantity)
         addNewItem(tempItem)
         logImport(user,tempItem,quantity)
     }
     fun extractItem(ID: Int, quantity: Int): ReturnValues {
-        val currentUser = userDatabase.currentUser
+        val currentUser = CUserDatabase.currentUser
         if(currentUser.name=="EMPTY")
             return ReturnValues.BAD_USER
         val item = getItem(ID) ?: return ReturnValues.BAD_ID
@@ -120,54 +119,8 @@ object CItemDatabase {
         i+=2
         return i
     }
-    fun importFromFile(filename: String){
-        val file = File("./data/$filename")
-        if(file.exists()){
-            val input = file.bufferedReader()
 
-            var currentLine = input.readLine().toString()
-            // Clear potential garbage before data
-            while(!currentLine.contains("[CInventory:"))
-                currentLine = input.readLine().toString()
-
-            // Helper variables for parsing
-            var name = ""
-            var price = 0
-            var otherPrice = 0
-            var quantity = 0
-            var count = 0
-            // read until you reach end of file
-            while(!currentLine.contains("]")){
-                if(currentLine.contains("\"name\":")){
-                    val i = skipHead(currentLine)
-                    name = currentLine.subSequence(i, currentLine.length - 2).toString()
-                }
-                if(currentLine.contains("\"price\":")){
-                    val i = skipHead(currentLine)
-                    price = (currentLine.subSequence(i, currentLine.length - 2)).toString().toInt()
-                }
-                if(currentLine.contains("\"otherPrice\":")){
-                    val i = skipHead(currentLine)
-                    otherPrice = (currentLine.subSequence(i, currentLine.length - 2)).toString().toInt()
-                }
-                if(currentLine.contains("\"quantity\":")){
-                    val i = skipHead(currentLine)
-                    quantity = (currentLine.subSequence(i, currentLine.length - 1)).toString().toInt()
-                }
-                // whole item is parsed
-                if(currentLine.contains("}")) {
-                    addNewItem(CItem(idCount++, name, price, otherPrice, quantity))
-                    count++
-                }
-                currentLine=input.readLine().toString()
-            }
-
-        }
-        else{
-            return
-        }
-    }
-    fun silentImportFromFile(filename: String){
+    private fun silentImportFromFile(filename: String){
         val file = File("./data/$filename")
         if(file.exists()){
             val input = file.bufferedReader()

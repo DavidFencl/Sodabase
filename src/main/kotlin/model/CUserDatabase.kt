@@ -14,11 +14,7 @@ object CUserDatabase{
         addUser(CUser("praja",200,"test",true))
         silentImportFromFile("users.txt")
     }
-    fun getUserByName(name: String): CUser?{
-        if(userDatabase.containsKey(name))
-            return userDatabase.getValue(name)
-        return null
-    }
+
     private fun addUser(user: CUser){
         userDatabase[user.name] = user
     }
@@ -72,50 +68,7 @@ object CUserDatabase{
         i+=2
         return i
     }
-    fun importFromFile(filename: String){
-        val file = File("./data/$filename")
-        if(file.exists()){
-            val input = file.bufferedReader()
-            var currentLine = input.readLine().toString()
-            // Clear potential garbage before data
-            while(!currentLine.contains("[CUserDatabase:"))
-                currentLine = input.readLine().toString()
 
-            // Helper variables for parsing
-            var name = ""
-            var password = ""
-            var balance = 0
-            var vip = false
-
-            // read until you reach end of file
-            while(!currentLine.contains("]")){
-                if(currentLine.contains("\"name\":")){
-                    val i = skipHead(currentLine)
-                    name = currentLine.subSequence(i, currentLine.length - 2).toString()
-                }
-                if(currentLine.contains("\"password\":")){
-                    val i = skipHead(currentLine)
-                    password = (currentLine.subSequence(i, currentLine.length - 2)).toString()
-                }
-                if(currentLine.contains("\"balance\":")){
-                    val i = skipHead(currentLine)
-                    balance = (currentLine.subSequence(i, currentLine.length - 2)).toString().toInt()
-                }
-                if(currentLine.contains("\"vip\":")){
-                    val i = skipHead(currentLine)
-                    vip = (currentLine.subSequence(i, currentLine.length - 2)).toString().toBoolean()
-                }
-                // whole item is parsed
-                if(currentLine.contains("}"))
-                    userDatabase[name] = CUser(name, balance, password, vip)
-                currentLine=input.readLine().toString()
-            }
-        }
-        else{
-            println("Takový soubor neexistuje!")
-            return
-        }
-    }
     fun silentImportFromFile(filename: String){
         val file = File("./data/$filename")
         if(file.exists()){

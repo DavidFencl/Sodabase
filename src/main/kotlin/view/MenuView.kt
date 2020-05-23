@@ -3,10 +3,8 @@ package view
 import controller.ItemController
 import controller.UserController
 import javafx.geometry.Pos
-import javafx.scene.control.TableView
 import model.CItem
 import model.CItemDatabase
-import model.CUserDatabase
 import tornadofx.*
 
 class MenuView : View("Sodabase"){
@@ -20,7 +18,7 @@ class MenuView : View("Sodabase"){
 }
 
 class ButtonMenu : View(){
-    override val root = borderpane() {
+    override val root = borderpane {
         addClass(MyStylesheet.menu)
         center {
             vbox (10,Pos.BASELINE_CENTER){
