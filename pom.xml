@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.72</kotlin.version>
-        <javafx.version>14.0.1</javafx.version>
+        <javafx.version>11.0.2</javafx.version>
         <maven.compiler.target>11.0.7</maven.compiler.target>
         <maven.compiler.source>11.0.7</maven.compiler.source>
         <main.class>view.MyAppKt</main.class>
@@ -28,12 +28,12 @@
             <artifactId>tornadofx</artifactId>
             <version>1.7.20</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx</artifactId>
-            <version>${javafx.version}</version>
-            <type>pom</type>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx</artifactId>-->
+<!--            <version>${javafx.version}</version>-->
+<!--            <type>pom</type>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
@@ -82,8 +82,11 @@
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>
-                        <goals> <goal>single</goal> </goals>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                         <configuration>
+                            <finalName>${project.artifactId}</finalName>
                             <archive>
                                 <manifest>
                                     <mainClass>${main.class}</mainClass>
@@ -92,7 +95,18 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
                     </execution>
                 </executions>
             </plugin>
