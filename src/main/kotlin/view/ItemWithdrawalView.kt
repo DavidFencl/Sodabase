@@ -32,10 +32,10 @@ class ItemWithdrawalView : View("Sodabase - Withdraw item") {
                     action {
                         if(itemID.get() != 0 && itemQuantity.get() != 0){
                             when(ItemController.tryWithdrawItem(itemID.get(), itemQuantity.get())){
-                                ReturnValues.BAD_ID -> find<BadItemId>().openModal(StageStyle.DECORATED, block = true)
-                                ReturnValues.TOO_MANY -> find<TooManyItems>().openModal(StageStyle.DECORATED, block = true)
+                                ReturnValues.BAD_ID -> find<BadItemId>().openModal(StageStyle.DECORATED)
+                                ReturnValues.TOO_MANY -> find<TooManyItems>().openModal(StageStyle.DECORATED)
                                 else -> {
-                                    find<WithdrawalOk>().openModal(StageStyle.DECORATED, block = true)
+                                    find<WithdrawalOk>().openModal(StageStyle.DECORATED)
                                     replaceWith(ButtonMenu::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.LEFT))
                                 }
                             }

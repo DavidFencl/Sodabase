@@ -41,10 +41,10 @@ class UserAdditionView : View("Sodabase - Add user"){
                     action {
                         if(userName.get() != "" && password1.get() != "" && password2.get() != "") {
                             when(UserController.registerUser(userName.get(),password1.get(), password2.get(),initialBalance.get(),vipStatus.get())){
-                                ReturnValues.PASSWORD_MISMATCH -> find<PasswordMismatch>().openModal(StageStyle.DECORATED, block = true)
-                                ReturnValues.BAD_USER -> find<ExistingUser>().openModal(StageStyle.DECORATED, block = true)
+                                ReturnValues.PASSWORD_MISMATCH -> find<PasswordMismatch>().openModal(StageStyle.DECORATED)
+                                ReturnValues.BAD_USER -> find<ExistingUser>().openModal(StageStyle.DECORATED)
                                 else -> {
-                                    find<ImportOk>().openModal(StageStyle.DECORATED, block = true)
+                                    find<ImportOk>().openModal(StageStyle.DECORATED)
                                     replaceWith(ButtonMenu::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.LEFT))
                                 }
                             }

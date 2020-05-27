@@ -40,7 +40,7 @@ class ItemImportView :View("Sodabase - Input item") {
                     action {
                         if(itemName.get() != "" && itemPrice.get() != 0 && otherPrice.get() != 0 && itemQuantity.get() != 0) {
                             ItemController.tryAddItem(itemName.get(),itemPrice.get(),otherPrice.get(),itemQuantity.get())
-                            find<ImportOk>().openModal(StageStyle.DECORATED, block = true)
+                            find<ImportOk>().openModal(StageStyle.DECORATED,block = true)
                             replaceWith(ButtonMenu::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.LEFT))
                         }
                     }

@@ -8,7 +8,7 @@ import java.util.*
 object CUserDatabase{
     private val userDatabase: TreeMap<String, CUser> = sortedMapOf<String,CUser>() as TreeMap<String, CUser>
     private val encryptor = PasswordEncrypt
-    var currentUser =CUser("EMPTY",vip = false)
+    lateinit var currentUser : CUser
 
     init{
         addUser(CUser("praja",200,"test",true))

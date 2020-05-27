@@ -21,7 +21,7 @@ object PasswordEncrypt{
             val input = strToEncrypt.toByteArray(charset("UTF8"))
 
             synchronized(Cipher::class.java) {
-                val cipher = Cipher.getInstance("AES/ECB/PKCS7Padding")
+                val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
                 cipher.init(Cipher.ENCRYPT_MODE, skey)
 
                 val cipherText = ByteArray(cipher.getOutputSize(input.size))
@@ -60,7 +60,7 @@ object PasswordEncrypt{
             val input = Base64.decode(strToDecrypt?.trim { it <= ' ' }?.toByteArray(charset("UTF8")))
 
             synchronized(Cipher::class.java) {
-                val cipher = Cipher.getInstance("AES/ECB/PKCS7Padding")
+                val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
                 cipher.init(Cipher.DECRYPT_MODE, skey)
 
                 val plainText = ByteArray(cipher.getOutputSize(input.size))

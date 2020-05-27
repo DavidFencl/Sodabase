@@ -12,13 +12,11 @@ object CItemDatabase {
         silentImportFromFile("items.txt")
     }
     private fun addNewItem(item: CItem){
-        // Update already existing item
         if(inventory[item.name] != null){
             item.quantity += inventory[item.name]?.quantity ?: 0
             inventory.remove(item.name)
             inventory[item.name] = item
         }
-        // Insert new item
         else
             inventory[item.name] = item
     }
@@ -61,10 +59,8 @@ object CItemDatabase {
         val retVal = checkOutItems(currentUser,ID, quantity)
 
         if (retVal == ReturnValues.OK) {
-            if (currentUser.vip) {
-
+            if (currentUser.vip)
                 currentUser.balance -= quantity * item.price
-            }
             else
                 currentUser.balance -= quantity * item.otherPrice
         }
@@ -72,23 +68,18 @@ object CItemDatabase {
     }
     private fun checkOutItems(user: CUser, itemID: Int, num: Int): ReturnValues{
         val item = getItem(itemID)?:return ReturnValues.BAD_ID
-        val quantity = item.quantity
-
-        if(num > quantity)
+        if(num > item.quantity)
             return ReturnValues.TOO_MANY
         logExtract(user, item, num)
         item.quantity-=num
 
         return ReturnValues.OK
     }
-    private fun getItem(ID: Int?): CItem?{
-        if(ID == null)
-            return null
-        val tempItem = null
+    private fun getItem(ID: Int): CItem?{
         for((_,v) in inventory)
             if(v.ID==ID)
                 return v
-        return tempItem
+        return null
     }
     fun exportToFile(filename: String, user: CUser){
         val outputDir = File("./data/")

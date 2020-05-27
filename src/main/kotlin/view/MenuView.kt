@@ -16,7 +16,6 @@ class MenuView : View("Sodabase"){
         center=itemDBPreview.root
     }
 }
-
 class ButtonMenu : View(){
     override val root = borderpane {
         addClass(MyStylesheet.menu)
@@ -40,7 +39,6 @@ class ButtonMenu : View(){
                         replaceWith(UserAdditionView::class,ViewTransition.Wipe(0.5.seconds, ViewTransition.Direction.RIGHT))
                     }
                 }
-                button("Button 4")
             }
         }
         bottom {
@@ -56,7 +54,6 @@ class ButtonMenu : View(){
         }
     }
 }
-
 class ItemDatabaseView: View() {
     override val root = tableview(CItemDatabase.getData().asObservable()) {
         addClass(MyStylesheet.itemTable)
@@ -65,8 +62,5 @@ class ItemDatabaseView: View() {
         readonlyColumn("Friends price", CItem::price)
         readonlyColumn("Others price", CItem::otherPrice)
         readonlyColumn("Quantity", CItem::quantity)
-
-       // smartResize()
     }
-
 }
