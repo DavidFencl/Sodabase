@@ -1,9 +1,0 @@
-[CUserDatabase:
-	{
-	"name":"praja",
-	"password":"oECRAeT9szdSJx9Vc6BXcw==",
-	"balance":"0",
-	"vip":"false"
-	}
-]
-Last edited by: praja at 2020-05-19T21:46:27.826375
